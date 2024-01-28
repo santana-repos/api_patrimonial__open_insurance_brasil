@@ -1,0 +1,6 @@
+FROM bitnami/redis:latest
+
+#COPY file.crt /usr/local/share/ca-certificates/cert-bundle.crt
+USER root
+RUN update-ca-certificates
+#ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt

@@ -1,0 +1,10 @@
+api-handler.zip
+
+.terraform*
+terraform.tfstate*
+
+containers/.localstack_vol
+
+app/jest_junit.xml
+
+lambda_call_output.json

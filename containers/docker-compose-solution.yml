@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  cache:
+    build:
+      context: .
+      dockerfile: DockerfileRedis
+    container_name: my-redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass **SenhaRedis**
+    volumes:
+    - cache/data
+  localstack:
+    build:
+      context: .
+      dockerfile: DockerfileLocalstack
+    container_name: my-localstack
+    ports:
+      - "4563-4599:4563-4599"
+      - "8080"
+    environment:
+      - SERVICES=apigateway,dynamodb,lambda,logs,s3,cloudwatch,sqs
+      - HOSTNAME=my-localstack
+      - HOSTNAME-EXTERNAL=my-localstack
+      - MAIN_CONTAINER_API_KEY=XXXXXXXX
+      - PERSISTENCE=1
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LAMBDA_RUNTIME_EXECUTOR=docker
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - "localstack_vol:/var/lib/localstack"
+      - "./.localstack_vol:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+volumes:
+  cache:
+    driver: local
+  localstack_vol:
